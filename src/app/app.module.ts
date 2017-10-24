@@ -7,17 +7,9 @@ import {MatButtonModule, MatCardModule, MatIconModule, MatProgressSpinnerModule,
 import {AuthService} from "./auth.service";
 import {RouterModule} from "@angular/router";
 import * as firebase from "firebase";
+import {environment} from "../environments/environment";
 
-
-const config = {
-    apiKey: "AIzaSyCMQNwxeO9jtR-aedfVjYF4iwz4Opwczp8",
-    authDomain: "custom-auth-d9c94.firebaseapp.com",
-    databaseURL: "https://custom-auth-d9c94.firebaseio.com",
-    projectId: "custom-auth-d9c94",
-    storageBucket: "custom-auth-d9c94.appspot.com",
-    messagingSenderId: "710858655867"
-};
-firebase.initializeApp(config);
+firebase.initializeApp(environment.firebase);
 
 @NgModule({
     declarations: [

@@ -3,19 +3,13 @@ import {Router} from "@angular/router";
 import * as auth0 from 'auth0-js';
 import * as firebase from "firebase";
 import {Subject} from "rxjs/Subject";
+import {environment} from "../environments/environment";
 
 @Injectable()
 export class AuthService {
     updates = new Subject<string>();
 
-    auth0 = new auth0.WebAuth({
-        clientID: 'mcVwIhh03QjPT60sR4tL5lQ200b9OFcy',
-        domain: 'shusson.au.auth0.com',
-        responseType: 'token id_token',
-        audience: 'https://shusson.au.auth0.com/userinfo',
-        redirectUri: 'http://localhost:4200',
-        scope: 'openid'
-    });
+    auth0 = new auth0.WebAuth(environment.auth0);
 
     constructor(public router: Router) {}
 
