@@ -1,9 +1,13 @@
 import {Injectable} from "@angular/core";
 import {Router} from "@angular/router";
 import * as auth0 from 'auth0-js';
+import * as firebase from "firebase";
+import {Subject} from "rxjs/Subject";
 
 @Injectable()
 export class AuthService {
+    uid = '';
+    updates = new Subject<string>();
 
     auth0 = new auth0.WebAuth({
         clientID: 'mcVwIhh03QjPT60sR4tL5lQ200b9OFcy',
@@ -23,9 +27,16 @@ export class AuthService {
     public handleAuthentication(): void {
         this.auth0.parseHash((err, authResult) => {
             if (authResult && authResult.accessToken && authResult.idToken) {
+                console.log(authResult);
                 window.location.hash = '';
                 this.setSession(authResult);
-                this.router.navigate(['/']);
+                this.uid = authResult.idTokenPayload.sub;
+                this.updates.next(this.uid);
+                firebase.auth().signInWithCustomToken(authResult.idTokenPayload["http://shusson/firebaseToken"]).then(() => {
+                    this.router.navigate(['/']);
+                }).catch(function(error) {
+                    console.log(error);
+                });
             } else if (err) {
                 this.router.navigate(['/']);
                 console.log(err);
