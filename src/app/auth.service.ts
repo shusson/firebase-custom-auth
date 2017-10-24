@@ -6,7 +6,6 @@ import {Subject} from "rxjs/Subject";
 
 @Injectable()
 export class AuthService {
-    uid = '';
     updates = new Subject<string>();
 
     auth0 = new auth0.WebAuth({
@@ -27,38 +26,43 @@ export class AuthService {
     public handleAuthentication(): void {
         this.auth0.parseHash((err, authResult) => {
             if (authResult && authResult.accessToken && authResult.idToken) {
-                console.log(authResult);
                 window.location.hash = '';
                 this.setSession(authResult);
-                this.uid = authResult.idTokenPayload.sub;
-                this.updates.next(this.uid);
-                firebase.auth().signInWithCustomToken(authResult.idTokenPayload["http://shusson/firebaseToken"]).then(() => {
-                    this.router.navigate(['/']);
-                }).catch(function(error) {
-                    console.log(error);
-                });
+                this.initSession();
             } else if (err) {
                 this.router.navigate(['/']);
                 console.log(err);
+            } else {
+                this.initSession();
             }
         });
     }
 
     private setSession(authResult): void {
-        // Set the time that the access token will expire at
         const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-        localStorage.setItem('access_token', authResult.accessToken);
-        localStorage.setItem('id_token', authResult.idToken);
+        localStorage.setItem('firebase_token', authResult.idTokenPayload["http://shusson/firebaseToken"]);
         localStorage.setItem('expires_at', expiresAt);
     }
 
+    public initSession() {
+        const ft = localStorage.getItem('firebase_token');
+        if (ft) {
+            firebase.auth().signInWithCustomToken(ft).then((user: firebase.User) => {
+                this.router.navigate(['/']);
+                this.updates.next(user.uid);
+            }).catch(function(e) {
+                console.log(e);
+            });
+        }
+    }
+
     public logout(): void {
-        // Remove tokens and expiry time from localStorage
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('id_token');
         localStorage.removeItem('expires_at');
-        // Go back to the home route
-        this.router.navigate(['/']);
+        localStorage.removeItem('firebase_token');
+        firebase.auth().signOut().catch(e => {
+            console.log(e);
+        });
+        window.location.reload();
     }
 
     public isAuthenticated(): boolean {

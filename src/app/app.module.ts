@@ -3,7 +3,7 @@ import {NgModule} from "@angular/core";
 
 import {AppComponent} from "./app.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MatButtonModule, MatIconModule, MatSelectModule, MatToolbarModule} from "@angular/material";
+import {MatButtonModule, MatCardModule, MatIconModule, MatProgressSpinnerModule, MatToolbarModule} from "@angular/material";
 import {AuthService} from "./auth.service";
 import {RouterModule} from "@angular/router";
 import * as firebase from "firebase";
@@ -29,7 +29,8 @@ firebase.initializeApp(config);
         MatToolbarModule,
         MatButtonModule,
         MatIconModule,
-        MatSelectModule,
+        MatCardModule,
+        MatProgressSpinnerModule,
         RouterModule.forRoot(
             [
                 { path: '*', component: AppComponent },

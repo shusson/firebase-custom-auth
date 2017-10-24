@@ -1,4 +1,4 @@
-import {AfterViewInit, Component} from "@angular/core";
+import {AfterViewInit, ChangeDetectorRef, Component} from "@angular/core";
 import {AuthService} from "./auth.service";
 import * as firebase from "firebase";
 import 'firebase/firestore';
@@ -9,25 +9,27 @@ import 'firebase/firestore';
     styleUrls: ["./app.component.css"]
 })
 export class AppComponent implements AfterViewInit {
+    name = '';
 
-    constructor(public auth: AuthService) {
+    constructor(public auth: AuthService, private cd: ChangeDetectorRef) {
         auth.handleAuthentication();
     }
 
     ngAfterViewInit(): void {
         const db = firebase.firestore();
-        this.auth.updates.subscribe(() => {
+        this.auth.updates.subscribe((uid) => {
 
-            const docRef = db.collection("users").doc(this.auth.uid);
+            const docRef = db.collection("users").doc(uid);
 
-            docRef.get().then(function(doc) {
+            docRef.get().then(doc => {
                 if (doc.exists) {
-                    console.log("Document data:", doc.data());
+                    this.name = doc.data().name;
+                    this.cd.detectChanges();
                 } else {
                     console.log("No such document!");
                 }
-            }).catch(function(error) {
-                console.log("Error getting document:", error);
+            }).catch(e => {
+                console.log("Error getting document:", e);
             });
         });
     }

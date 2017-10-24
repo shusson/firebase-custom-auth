@@ -1,6 +1,16 @@
 <mat-toolbar>
     Custom Firebase Auth
-    <span class="example-spacer"></span>
+    <span class="spacer"></span>
     <button mat-raised-button (click)="auth.login()" *ngIf="!auth.isAuthenticated()">LOG IN</button>
     <button mat-raised-button (click)="auth.logout()" *ngIf="auth.isAuthenticated()">LOG OUT</button>
 </mat-toolbar>
+
+<div class="users">
+    <div class="user-card" *ngIf="name">
+        <div>You are logged in as:</div>
+        <div>{{name}}</div>
+    </div>
+    <mat-spinner *ngIf="!name"></mat-spinner>
+</div>
+
+
