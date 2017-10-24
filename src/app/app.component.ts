@@ -26,7 +26,13 @@ export class AppComponent implements AfterViewInit {
                     this.name = doc.id;
                     this.cd.detectChanges();
                 } else {
-                    console.log("No such document!");
+                    db.collection("users").doc(uid).set({})
+                        .then(() => {
+                            this.name = doc.id;
+                        })
+                        .catch((e) => {
+                            console.error("Error writing document: ", e);
+                        });
                 }
             }).catch(e => {
                 console.log("Error getting document:", e);
