@@ -2,6 +2,12 @@
     flex: 1 1 auto;
 }
 
+a {
+    color: deeppink;
+    cursor: pointer;
+    text-decoration: deeppink;
+}
+
 .user-card {
     display: flex;
     justify-content: center;

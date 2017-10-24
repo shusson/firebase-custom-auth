@@ -1,5 +1,5 @@
 <mat-toolbar>
-    Custom Firebase Auth
+    Firebase and Auth0 Demo
     <span class="spacer"></span>
     <button mat-raised-button (click)="auth.login()" *ngIf="!auth.isAuthenticated()">LOG IN</button>
     <button mat-raised-button (click)="auth.logout()" *ngIf="auth.isAuthenticated()">LOG OUT</button>
@@ -11,6 +11,13 @@
         <div>{{name}}</div>
     </div>
     <mat-spinner *ngIf="!name"></mat-spinner>
+</div>
+
+<div class="users" *ngIf="!auth.isAuthenticated()">
+    <div class="user-card">
+        <p>This is a simple demo of using Auth0 as a custom auth service for Firebase</p>
+        <p><a (click)="auth.login()">Log in</a> to see it work</p>
+    </div>
 </div>
 
 
