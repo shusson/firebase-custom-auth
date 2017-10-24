@@ -23,7 +23,7 @@ export class AppComponent implements AfterViewInit {
 
             docRef.get().then(doc => {
                 if (doc.exists) {
-                    this.name = doc.data().name;
+                    this.name = doc.id;
                     this.cd.detectChanges();
                 } else {
                     console.log("No such document!");
